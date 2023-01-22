@@ -10,15 +10,44 @@
  * 1. add mouse movement detection
  * 2. add another sound for beeping
  * 3. add option for sound if break time is also over
+ * 4. (future improvement) computer vision to make sure a person walked and not still sitting (for example watching a video case)
  */
-int main()
+int main(int argc, char* argv[])
 {
-	auto const breakTimeMin = 5;
-	auto const workTimeMin = 25;
+	int workTimeMin, breakTimeMin;
+
+	// 3 = program name, first parameter, second parameter
+	if(argc > 3)
+	{
+		std::cout << "Program args: [Work Time in Min] [Break Time in Min]\n";
+		exit(0);
+	}
+	else if(argc != 3)
+	{
+		std::cout << "Using default values for unspecifed parameters!\n";
+	}
+
+	if (argc == 1)
+	{
+		workTimeMin = 25;
+		breakTimeMin = 5;
+	}
+	else if (argc == 2)
+	{
+		workTimeMin = atoi(argv[1]);
+		breakTimeMin = 5;
+	}
+	else // argc == 3
+	{
+		workTimeMin = atoi(argv[1]);
+		breakTimeMin = atoi(argv[2]);
+	}
+
+	std::cout << "Work Time in Min: " << workTimeMin << "\n";
+	std::cout << "Break Time in Min: " << breakTimeMin << "\n";
 
 	float continuousWorkTime = 0;
 
-	bool isBreak = false;
 	bool keyIsPressed = false;
 	auto start = std::chrono::steady_clock::now();
 
@@ -43,8 +72,9 @@ int main()
 			auto now = std::chrono::steady_clock::now();
 			auto timePassed = std::chrono::duration_cast<std::chrono::seconds>(now - start).count();
 			start = now;
+#ifdef _DEBUG
 			std::cout << "Since last key stroke in minutes " << timePassed << "\n";
-
+#endif
 			if (timePassed < breakTimeMin * 60)
 			{
 				continuousWorkTime += timePassed / 60.f;
