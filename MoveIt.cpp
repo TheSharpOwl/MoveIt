@@ -73,7 +73,8 @@ int main(int argc, char* argv[])
 			auto timePassed = std::chrono::duration_cast<std::chrono::seconds>(now - start).count();
 			start = now;
 #ifdef _DEBUG
-			std::cout << "Since last key stroke in minutes " << timePassed << "\n";
+			std::cout << "Since last key stroke in minutes " << timePassed/60.f << "\n";
+			std::cout << "Since last key stroke in seconds " << timePassed << "\n";
 #endif
 			if (timePassed < breakTimeMin * 60)
 			{
